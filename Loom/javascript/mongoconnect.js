@@ -45,13 +45,14 @@ async function updateTimeData(startTime, endTime) {
   if (!collection || !device) return;
 
   // Query MongoDB for packets within the time range and sort by timestamp
-  const packets = await collection.find({ "Timestamp.time_utc": { "$gte": startTime, "$lt": endTime } })
+  const packets = await collection.find({ "Timestamp.time_utc": { "$gte": startTime, "$lte": endTime } })
                                   .sort({ "Timestamp.time_utc": 1 })
                                   .toArray();
 
   // Check if any packets were found
   if (packets.length === 0) {
     maxApi.post("No packets were found within the given dates");
+    maxApi.outlet("noData");
     return;
   }
 
